@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import subprocess
 import os
+import subprocess
 
 os.chdir("/home/kevin/Projects/vision-robotics-suite")
 
@@ -12,7 +12,7 @@ print("✅ ALL files staged with 'git add .'")
 
 # Commit with universal message
 subprocess.call([
-    "git", "commit", "-m", 
+    "git", "commit", "-m",
     "feat: Complete Vision Robotics Suite platform\n\nUniversal commit of all project files including the comprehensive 104,752+ line industrial automation platform with Docker orchestration, utilities, and automation tools."
 ])
 

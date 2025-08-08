@@ -8,7 +8,7 @@ os.chdir("/home/kevin/Projects/vision-robotics-suite")
 print("🔧 Final commit - staging ALL remaining files...")
 
 # Stage everything with verbose output
-result = subprocess.run(["git", "add", "."], 
+result = subprocess.run(["git", "add", "."],
                        capture_output=True, text=True, check=False)
 if result.returncode == 0:
     print("✅ All files staged successfully")
@@ -62,7 +62,7 @@ Final comprehensive commit including all project files:
 TOTAL: 104,752+ lines of production robotics code
 Complete industrial automation platform ready for deployment"""
 
-commit_result = subprocess.run(["git", "commit", "-m", msg], 
+commit_result = subprocess.run(["git", "commit", "-m", msg],
                              capture_output=True, text=True, check=False)
 if commit_result.returncode == 0:
     print("✅ Committed successfully!")
@@ -70,7 +70,7 @@ else:
     print(f"❌ Commit failed: {commit_result.stderr}")
 
 # Check final status
-result = subprocess.run(["git", "status", "--porcelain"], 
+result = subprocess.run(["git", "status", "--porcelain"],
                        capture_output=True, text=True, check=False)
 if result.stdout.strip():
     print("📋 Remaining files:")

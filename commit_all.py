@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import subprocess
 import os
+import subprocess
 
 # Change to the project directory
 os.chdir("/home/kevin/Projects/vision-robotics-suite")
@@ -41,7 +41,7 @@ except subprocess.CalledProcessError as e:
 
 # Check final status
 try:
-    result = subprocess.run(["git", "status", "--porcelain"], 
+    result = subprocess.run(["git", "status", "--porcelain"],
                           capture_output=True, text=True, check=True)
     if result.stdout.strip():
         print("📋 Remaining untracked files:")

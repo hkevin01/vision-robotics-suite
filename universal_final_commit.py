@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import subprocess
 import os
+import subprocess
 
 os.chdir("/home/kevin/Projects/vision-robotics-suite")
 
@@ -78,7 +78,7 @@ except Exception as e:
 
 # Final status check
 try:
-    result = subprocess.run(["git", "status", "--porcelain"], 
+    result = subprocess.run(["git", "status", "--porcelain"],
                           capture_output=True, text=True, check=True)
     if result.stdout.strip():
         lines = result.stdout.strip().split('\n')
@@ -87,17 +87,17 @@ try:
             print(f"  {line}")
         if len(lines) > 10:
             print(f"  ... and {len(lines)-10} more")
-            
+
         # Try one more time to stage anything remaining
         subprocess.run(["git", "add", "."], check=True)
         print("✅ Additional files staged")
-        
+
         # Commit any remaining files
         subprocess.run(["git", "commit", "-m", "fix: Final cleanup - stage any remaining files"], check=True)
         print("✅ Final cleanup commit completed")
-        
+
         # Check again
-        final_result = subprocess.run(["git", "status", "--porcelain"], 
+        final_result = subprocess.run(["git", "status", "--porcelain"],
                                     capture_output=True, text=True, check=True)
         if final_result.stdout.strip():
             print("📋 Some files may still be untracked - this is normal for temporary files")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import subprocess
 import os
+import subprocess
 
 os.chdir("/home/kevin/Projects/vision-robotics-suite")
 subprocess.call(["git", "add", "."])

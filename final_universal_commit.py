@@ -64,7 +64,7 @@ except Exception as e:
 # Final status check
 print("🎯 Checking final repository status...")
 try:
-    result = subprocess.run(["git", "status", "--porcelain"], 
+    result = subprocess.run(["git", "status", "--porcelain"],
                           capture_output=True, text=True, check=True)
     if result.stdout.strip():
         lines = result.stdout.strip().split('\n')

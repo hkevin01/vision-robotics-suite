@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import subprocess
 import os
+import subprocess
 
 os.chdir("/home/kevin/Projects/vision-robotics-suite")
 
@@ -10,7 +10,7 @@ print("🔧 Executing universal commit NOW...")
 subprocess.call(["git", "add", "."])
 print("✅ All files staged")
 
-# Commit 
+# Commit
 subprocess.call(["git", "commit", "-m", "feat: Universal commit - Complete Vision Robotics Suite platform with all utilities"])
 print("✅ Committed!")
 
