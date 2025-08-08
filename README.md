@@ -16,61 +16,49 @@ This repository contains Python modules that simulate industrial automation work
 - **Development Environment**: Docker containers with Python, Node.js, Go, Rust toolchains
 - **Code Quality Tools**: Black, flake8, mypy, pytest with CI/CD workflows
 
-## 🏗️ System Architecture
-
-```text
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│ Vision System   │────│ Control Layer    │────│ Robot System    │
-│ (HALCON/Cognex) │    │ (PLC/SCADA)      │    │ (Multi-vendor)  │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-         │                       │                       │
-         └───────────────────────┼───────────────────────┘
-                                 │
-                  ┌──────────────────┐
-                  │ HMI/Dashboard    │
-                  │ (Web-based)      │
-                  └──────────────────┘
-```
-
 ## 📁 Project Structure
 
 ```text
 vision-robotics-suite/
-├── src/
-├── tests/
-├── docs/
-├── scripts/
-├── config/
-├── docker*/
+├── src/vision_systems/           # Vision system modules  
+│   ├── automotive_paint_inspection.py
+│   ├── body_in_white_inspection.py
+│   ├── battery_pack_quality_control.py
+│   ├── engine_timing_chain_verification.py
+│   └── base.py                   # Base classes
+├── docker/                       # Development containers
+├── tests/                        # Test modules
+├── scripts/                      # Setup and utility scripts
 └── README.md
 ```
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 
 ### Prerequisites
 
 - Python 3.8+
-- Docker (for containerized workflow)
+- Docker (optional, for containerized development)
 - Git
 
-### Local Install (Minimal)
+### Local Setup
 
 ```bash
-git clone https://github.com/vision-robotics-suite/vision-robotics-suite.git
+git clone <repository-url>
 cd vision-robotics-suite
 python -m venv venv
-source venv/bin/activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install poetry
-poetry install --with dev,test
-poetry run pytest -q
+poetry install
 ```
 
-### Docker Dev Environment
+### Docker Development Environment
 
 ```bash
-bash scripts/dev-setup.sh          # One-time setup
-make dev-start                     # Start full stack
-make dev-shell                     # Enter backend dev container
+# Start development containers with full toolchain
+make dev-start
+
+# Enter development shell
+make dev-shell
 ```
 
 ## 🔧 Core Technologies
