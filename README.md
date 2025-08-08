@@ -4,20 +4,17 @@
 [![Tests](https://github.com/vision-robotics-suite/vision-robotics-suite/actions/workflows/test.yml/badge.svg)](https://github.com/vision-robotics-suite/vision-robotics-suite/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Industrial Automation](https://img.shields.io/badge/Industrial-Automation-green.svg)](https://github.com/vision-robotics-suite)
 
-A comprehensive industrial automation platform demonstrating integration between machine vision systems, industrial robots, PLCs, and quality control systems for modern manufacturing applications.
+A Python codebase demonstrating industrial automation concepts through simulated vision systems and quality control modules.
 
-## 🎯 Project Overview
+## 🎯 What's Actually Here
 
-The Vision Robotics Suite showcases expertise in vision-guided robotics systems, industrial automation, and manufacturing integration - covering core competencies required for modern automation engineering roles including:
+This repository contains Python modules that simulate industrial automation workflows:
 
-- **Machine Vision Integration**: HALCON, Cognex VisionPro, 3D vision systems
-- **Industrial Robotics**: FANUC, Yaskawa, ABB, Universal Robots programming
-- **PLC Systems**: Siemens TIA Portal, Rockwell RSLogix integration
-- **Quality Compliance**: IATF 16949, VDA 6.3 frameworks implementation
-- **SCADA/HMI**: Modern web-based interfaces and industrial monitoring
-- **Digital Twin**: Simulation and virtual commissioning capabilities
+- **Vision System Architecture**: Base classes and interfaces for vision systems
+- **Simulated Inspection Modules**: Paint inspection, body-in-white, timing chain verification, battery pack QC
+- **Development Environment**: Docker containers with Python, Node.js, Go, Rust toolchains
+- **Code Quality Tools**: Black, flake8, mypy, pytest with CI/CD workflows
 
 ## 🏗️ System Architecture
 
