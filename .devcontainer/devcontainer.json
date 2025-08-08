@@ -1,0 +1,204 @@
+{
+    "name": "Vision Robotics Suite Dev Container",
+    "dockerComposeFile": "../docker-compose.dev.yml",
+    "service": "backend-dev",
+    "workspaceFolder": "/home/developer/workspace",
+    "shutdownAction": "stopCompose",
+
+    // Configure tool-specific properties
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // Python extensions
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-python.flake8",
+                "ms-python.black-formatter",
+                "ms-python.isort",
+
+                // JavaScript/TypeScript extensions
+                "ms-vscode.vscode-typescript-next",
+                "esbenp.prettier-vscode",
+                "dbaeumer.vscode-eslint",
+
+                // Docker extensions
+                "ms-azuretools.vscode-docker",
+                "ms-vscode-remote.remote-containers",
+
+                // Database extensions
+                "ms-mssql.mssql",
+                "cweijan.vscode-postgresql-client2",
+                "formulahendry.vscode-mysql",
+
+                // Git extensions
+                "eamodio.gitlens",
+                "github.vscode-pull-request-github",
+
+                // Code quality extensions
+                "sonarsource.sonarlint-vscode",
+                "ms-vscode.vscode-json",
+                "redhat.vscode-yaml",
+
+                // Testing extensions
+                "ms-python.pytest",
+                "hbenl.vscode-test-explorer",
+
+                // Documentation extensions
+                "davidanson.vscode-markdownlint",
+                "yzhang.markdown-all-in-one",
+
+                // Utility extensions
+                "ms-vscode.vscode-thunder-client",
+                "humao.rest-client",
+                "visualstudioexptteam.vscodeintellicode",
+                "ms-vscode.vscode-todo-highlight",
+
+                // Computer Vision specific
+                "ms-toolsai.jupyter",
+                "ms-toolsai.vscode-jupyter-cell-tags",
+                "ms-toolsai.vscode-jupyter-slideshow"
+            ],
+
+            "settings": {
+                // Python settings
+                "python.defaultInterpreterPath": "/usr/bin/python3",
+                "python.linting.enabled": true,
+                "python.linting.pylintEnabled": true,
+                "python.linting.flake8Enabled": true,
+                "python.formatting.provider": "black",
+                "python.sortImports.provider": "isort",
+                "python.testing.pytestEnabled": true,
+                "python.testing.unittestEnabled": false,
+                "python.testing.pytestArgs": ["tests"],
+
+                // JavaScript/TypeScript settings
+                "typescript.preferences.includePackageJsonAutoImports": "on",
+                "javascript.suggest.autoImports": true,
+                "editor.formatOnSave": true,
+                "editor.codeActionsOnSave": {
+                    "source.organizeImports": "explicit",
+                    "source.fixAll.eslint": "explicit"
+                },
+
+                // Docker settings
+                "docker.showStartPage": false,
+
+                // Git settings
+                "git.enableSmartCommit": true,
+                "git.confirmSync": false,
+                "git.autofetch": true,
+
+                // Editor settings
+                "editor.rulers": [79, 88, 120],
+                "editor.tabSize": 4,
+                "editor.insertSpaces": true,
+                "files.trimTrailingWhitespace": true,
+                "files.insertFinalNewline": true,
+
+                // Terminal settings
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "/bin/bash",
+                        "args": ["-l"]
+                    }
+                },
+
+                // File associations
+                "files.associations": {
+                    "*.yml": "yaml",
+                    "*.yaml": "yaml",
+                    "Dockerfile*": "dockerfile",
+                    "*.md": "markdown"
+                }
+            }
+        }
+    },
+
+    // Set container-specific VS Code settings
+    "remoteUser": "developer",
+
+    // Port forwarding for development services
+    "forwardPorts": [
+        3000,  // Frontend dev server
+        5000,  // Flask/FastAPI
+        8000,  // Django/FastAPI
+        8080,  // Alternative web server
+        5432,  // PostgreSQL
+        3306,  // MySQL
+        6379,  // Redis
+        27017, // MongoDB
+        9200,  // Elasticsearch
+        5672,  // RabbitMQ
+        15672, // RabbitMQ Management
+        9000,  // MinIO
+        9090,  // Prometheus
+        3000   // Grafana
+    ],
+
+    // Port attributes
+    "portsAttributes": {
+        "3000": {
+            "label": "Frontend Dev Server",
+            "onAutoForward": "notify"
+        },
+        "5000": {
+            "label": "Backend API",
+            "onAutoForward": "notify"
+        },
+        "8000": {
+            "label": "Django/FastAPI",
+            "onAutoForward": "notify"
+        },
+        "5432": {
+            "label": "PostgreSQL",
+            "onAutoForward": "silent"
+        },
+        "6379": {
+            "label": "Redis",
+            "onAutoForward": "silent"
+        }
+    },
+
+    // Mount local filesystem
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/home/developer/workspace,type=bind,consistency=cached",
+        "source=vision-dev-cache,target=/home/developer/.cache,type=volume",
+        "source=vision-dev-npm,target=/home/developer/.npm,type=volume",
+        "source=vision-dev-pip,target=/home/developer/.cache/pip,type=volume"
+    ],
+
+    // Environment variables
+    "containerEnv": {
+        "PYTHONPATH": "/home/developer/workspace",
+        "NODE_ENV": "development",
+        "DEBUG": "1",
+        "DATABASE_URL": "postgresql://developer:devpass123@postgres:5432/vision_robotics",
+        "REDIS_URL": "redis://redis:6379",
+        "MONGODB_URL": "mongodb://admin:adminpass123@mongodb:27017/vision_robotics"
+    },
+
+    // Features to install
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {
+            "version": "latest",
+            "ppa": true
+        },
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "version": "latest",
+            "moby": true
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {
+            "version": "latest"
+        }
+    },
+
+    // Post-create command
+    "postCreateCommand": "bash .devcontainer/post-create.sh",
+
+    // Life cycle scripts
+    "initializeCommand": "echo 'Initializing development container...'",
+    "onCreateCommand": "echo 'Container created successfully!'",
+    "updateContentCommand": "echo 'Updating container content...'",
+    "postStartCommand": "echo 'Container started successfully!'"
+}

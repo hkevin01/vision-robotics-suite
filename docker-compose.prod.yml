@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  # Production API Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vision-api-prod
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=false
+      - LOG_LEVEL=INFO
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - prod-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Production Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: vision-postgres-prod
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    networks:
+      - prod-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Production Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: vision-redis-prod
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_prod_data:/data
+    networks:
+      - prod-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "auth", "${REDIS_PASSWORD}", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # NGINX Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: vision-nginx-prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx-prod.conf:/etc/nginx/nginx.conf
+      - ./config/ssl:/etc/nginx/ssl
+      - ./static:/var/www/static
+    depends_on:
+      - api
+    networks:
+      - prod-network
+
+  # Production Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: vision-prometheus-prod
+    restart: unless-stopped
+    volumes:
+      - ./config/prometheus-prod.yml:/etc/prometheus/prometheus.yml
+      - prometheus_prod_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.retention.time=30d'
+    networks:
+      - prod-network
+
+  # Production Metrics Visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: vision-grafana-prod
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+    volumes:
+      - grafana_prod_data:/var/lib/grafana
+      - ./config/grafana-datasources-prod.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    depends_on:
+      - prometheus
+    networks:
+      - prod-network
+
+volumes:
+  postgres_prod_data:
+    driver: local
+  redis_prod_data:
+    driver: local
+  prometheus_prod_data:
+    driver: local
+  grafana_prod_data:
+    driver: local
+
+networks:
+  prod-network:
+    driver: bridge

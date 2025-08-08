@@ -1,0 +1,364 @@
+version: '3.8'
+
+services:
+  # Backend Development Container
+  backend-dev:
+    build:
+      context: .
+      dockerfile: docker/dev-backend.Dockerfile
+    container_name: vision-backend-dev
+    volumes:
+      - .:/home/developer/workspace
+      - backend_cache:/home/developer/.cache
+      - backend_npm:/home/developer/.npm-global
+      - backend_pip:/home/developer/.cache/pip
+    ports:
+      - "5000:5000"
+      - "8000:8000"
+      - "8888:8888"  # Jupyter
+    environment:
+      - PYTHONPATH=/home/developer/workspace
+      - NODE_ENV=development
+      - DEBUG=1
+    depends_on:
+      - postgres
+      - redis
+      - mongodb
+    networks:
+      - dev-network
+    stdin_open: true
+    tty: true
+
+  # Frontend Development Container
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: docker/dev-frontend.Dockerfile
+    container_name: vision-frontend-dev
+    volumes:
+      - .:/home/developer/workspace
+      - frontend_cache:/home/developer/.cache
+      - frontend_npm:/home/developer/.npm-global
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "4200:4200"
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - dev-network
+    stdin_open: true
+    tty: true
+
+  # Development Tools Container
+  dev-tools:
+    build:
+      context: .
+      dockerfile: docker/dev-tools.Dockerfile
+    container_name: vision-dev-tools
+    volumes:
+      - .:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - dev-network
+    profiles:
+      - tools
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: vision-dev-postgres
+    environment:
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: devpass123
+      POSTGRES_DB: vision_robotics
+      POSTGRES_MULTIPLE_DATABASES: vision_robotics_test,vision_analytics
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U developer -d vision_robotics"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - dev-network
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: vision-dev-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass123
+      MYSQL_DATABASE: vision_robotics
+      MYSQL_USER: developer
+      MYSQL_PASSWORD: devpass123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./scripts/init-mysql.sql:/docker-entrypoint-initdb.d/init-mysql.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "developer", "-pdevpass123"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - dev-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: vision-dev-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - dev-network
+
+  # MongoDB
+  mongodb:
+    image: mongo:6.0
+    container_name: vision-dev-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpass123
+      MONGO_INITDB_DATABASE: vision_robotics
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - dev-network
+
+  # Elasticsearch
+  elasticsearch:
+    image: elasticsearch:8.8.0
+    container_name: vision-dev-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - dev-network
+
+  # pgAdmin for PostgreSQL management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: vision-dev-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@vision-robotics.local
+      PGADMIN_DEFAULT_PASSWORD: adminpass123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - dev-network
+
+  # phpMyAdmin for MySQL management
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: vision-dev-phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: developer
+      PMA_PASSWORD: devpass123
+      UPLOAD_LIMIT: 300M
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - dev-network
+
+  # Redis Commander
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: vision-dev-redis-commander
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - dev-network
+
+  # Mongo Express
+  mongo-express:
+    image: mongo-express:latest
+    container_name: vision-dev-mongo-express
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: adminpass123
+      ME_CONFIG_MONGODB_URL: mongodb://admin:adminpass123@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: developer
+      ME_CONFIG_BASICAUTH_PASSWORD: devpass123
+    ports:
+      - "8082:8081"
+    depends_on:
+      - mongodb
+    networks:
+      - dev-network
+
+  # RabbitMQ Message Broker
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: vision-dev-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: developer
+      RABBITMQ_DEFAULT_PASS: devpass123
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - dev-network
+
+  # MinIO S3-compatible object storage
+  minio:
+    image: minio/minio:latest
+    container_name: vision-dev-minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - dev-network
+
+  # NGINX Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: vision-dev-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/ssl:/etc/nginx/ssl
+    depends_on:
+      - postgres
+      - redis
+      - mongodb
+    networks:
+      - dev-network
+
+  # Prometheus Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: vision-dev-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - dev-network
+
+  # Grafana Visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: vision-dev-grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: grafanapass123
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    depends_on:
+      - prometheus
+    networks:
+      - dev-network
+
+volumes:
+  backend_cache:
+    driver: local
+  backend_npm:
+    driver: local
+  backend_pip:
+    driver: local
+  frontend_cache:
+    driver: local
+  frontend_npm:
+    driver: local
+  postgres_data:
+    driver: local
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  minio_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  dev-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
