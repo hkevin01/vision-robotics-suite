@@ -117,7 +117,49 @@ vision-robotics-suite/
    poetry run pytest tests/ -v
    ```
 
-## 🔧 Core Technologies
+## � Docker Development Environment
+
+### Universal Containerized Development
+
+For a completely isolated and consistent development environment, use the Universal Docker Development Strategy that eliminates local dependency conflicts:
+
+```bash
+# One-command setup for complete development environment
+bash scripts/dev-setup.sh
+
+# Or use Make commands
+make dev-start      # Start all development containers
+make dev-shell      # Open development shell
+make dev-stop       # Stop all containers
+```
+
+### What's Included
+
+- **Multi-language containers**: Python, Node.js, Go, Rust development
+- **Database stack**: PostgreSQL, MySQL, Redis, MongoDB, Elasticsearch
+- **Development tools**: Jupyter Lab, testing frameworks, code quality tools
+- **Infrastructure**: NGINX, monitoring with Prometheus/Grafana
+- **VS Code integration**: Complete dev container setup
+
+### Service Access Points
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| Backend API | <http://localhost:8000> | Main application API |
+| Jupyter Lab | <http://localhost:8888> | Interactive development |
+| Database Admin | <http://localhost:5050> | pgAdmin interface |
+| Monitoring | <http://localhost:9090> | Prometheus metrics |
+
+### VS Code Dev Container
+
+1. Install "Remote - Containers" extension
+2. Open project in VS Code
+3. Press F1 → "Remote-Containers: Reopen in Container"
+4. Start developing with zero local dependencies
+
+For complete Docker setup documentation, see **[DOCKER_STRATEGY.md](DOCKER_STRATEGY.md)**.
+
+## �🔧 Core Technologies
 
 ### Machine Vision Systems
 - **MVTec HALCON**: Advanced image processing for inspection and measurement
