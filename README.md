@@ -20,7 +20,7 @@ This repository contains Python modules that simulate industrial automation work
 
 ```text
 vision-robotics-suite/
-├── src/vision_systems/           # Vision system modules  
+├── src/vision_systems/           # Vision system modules
 │   ├── automotive_paint_inspection.py
 │   ├── body_in_white_inspection.py
 │   ├── battery_pack_quality_control.py
@@ -61,78 +61,66 @@ make dev-start
 make dev-shell
 ```
 
-## 🔧 Core Technologies
+## 🔧 Implementation Details
 
-### Machine Vision Systems
+The codebase includes:
 
-- HALCON (conceptual integration stubs)
-- Cognex VisionPro (integration scaffolding)
-- OpenCV, 3D point cloud handling
+### Simulation Modules
 
-### Robotics
+- **Paint Inspection**: Defect detection algorithms with OpenCV (HALCON integration uses mock for development)
+- **Body-in-White**: 360° inspection simulation with pass/fail logic
+- **Timing Chain Verification**: Engine assembly verification with traceability
+- **Battery Pack QC**: Thermal analysis and dimensional verification simulation
 
-- FANUC (force feedback integration examples)
-- Yaskawa & ABB (multi-robot coordination scaffolds)
-- Universal Robots (collaborative safety zone logic)
+### Development Infrastructure
 
-### Controls & Data
+- **Multi-language Docker containers**: Python 3.10, Node.js LTS, Go 1.21.5, Rust
+- **Code quality pipeline**: Black formatting, flake8 linting, mypy type checking
+- **Testing framework**: pytest with coverage reporting
 
-- PLC communication placeholders
-- Quality & SPC analysis modules
-- Monitoring / logging integration points
-
-## 💡 Example (Abbreviated)
+## 💡 Usage Example
 
 ```python
-from src.vision_systems.automotive_paint_inspection import AutomotivePaintInspector, InspectionParameters
+from src.vision_systems.automotive_paint_inspection import (
+    AutomotivePaintInspector,
+    InspectionParameters
+)
 
+# Initialize paint inspector with simulation
 params = InspectionParameters()
 inspector = AutomotivePaintInspector(params)
+
+# Run inspection (uses mock HALCON for demo)
 result = inspector.inspect_paint_surface("sample.jpg")
-print(result.get("defects_detected"))
+print(f"Defects found: {len(result.get('defects', []))}")
 ```
 
 ## 🛠️ Development Commands
 
 ```bash
-poetry run pytest                # Run tests
-poetry run black src tests       # Format
+# Code quality
+poetry run black src tests       # Format code
 poetry run flake8 src tests      # Lint
 poetry run mypy src              # Type check
+poetry run pytest               # Run tests
+
+# Docker development
+make dev-start                   # Start containers
+make dev-stop                    # Stop containers
+make dev-shell                   # Enter development shell
 ```
-
-## 📚 Documentation
-
-Currently only high-level planning exists:
-
-- `docs/project_plan.md` – roadmap / planning notes
-
-(Additional architecture and API docs can be added incrementally as modules mature.)
-
-## 🤝 Contributing
-
-Contributions are welcome. Open an issue or submit a pull request with:
-
-- Clear problem statement
-- Minimal reproducible example (if bug)
-- Focused, scoped changes
 
 ## 📄 License
 
-MIT License – see `LICENSE`.
+MIT License
 
-## 📊 Status & Scope
+## ⚠️ Important Notes
 
-This repository contains illustrative, prototype-level modules. Some integrations (HALCON, Cognex, proprietary robot SDKs) are represented with stubs or mock implementations for demonstration and cannot run production workflows without vendor SDKs.
-
-## 🧩 Removed Placeholder Content
-
-Removed previous placeholder email, generic support inbox, and links to non‑existent docs to keep the README factual and lean.
-
-## 🙏 Acknowledgments
-
-Open source ecosystem and industrial automation community for tooling and patterns.
+- **Simulation Only**: This is a demonstration codebase with simulated data
+- **Mock Integrations**: HALCON, Cognex, and robot SDK integrations use mock implementations
+- **Educational Purpose**: Designed to show software architecture patterns, not production industrial systems
+- **No Real Hardware**: Does not connect to actual cameras, PLCs, or robots
 
 ---
 
-Focused, realistic, and incrementally extensible.
+*A Python codebase exploring industrial automation software patterns.*
