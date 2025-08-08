@@ -1,0 +1,230 @@
+[tool.poetry]
+name = "vision-robotics-suite"
+version = "0.1.0"
+description = "A comprehensive industrial automation platform demonstrating integration between machine vision systems, industrial robots, PLCs, and quality control systems"
+authors = ["Vision Robotics Team <team@vision-robotics-suite.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/vision-robotics-suite/vision-robotics-suite"
+repository = "https://github.com/vision-robotics-suite/vision-robotics-suite"
+documentation = "https://vision-robotics-suite.readthedocs.io"
+keywords = [
+    "industrial-automation",
+    "machine-vision",
+    "robotics",
+    "plc",
+    "scada",
+    "quality-control",
+    "manufacturing",
+    "iatf-16949",
+    "opc-ua",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Manufacturing",
+    "Topic :: Scientific/Engineering :: Industrial Engineering",
+    "Topic :: Software Development :: Embedded Systems",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+# Core dependencies
+numpy = "^1.21.0"
+opencv-python = "^4.5.0"
+Pillow = "^9.0.0"
+scipy = "^1.8.0"
+
+# Industrial communication
+opcua = "^0.98.13"
+pymodbus = "^3.1.0"
+pycomm3 = "^1.2.0"
+
+# Data handling and analysis
+pandas = "^1.4.0"
+matplotlib = "^3.5.0"
+plotly = "^5.6.0"
+influxdb-client = "^1.24.0"
+
+# Web framework for SCADA/HMI
+fastapi = "^0.85.0"
+uvicorn = "^0.18.0"
+websockets = "^10.4"
+jinja2 = "^3.1.0"
+
+# Database support
+sqlalchemy = "^1.4.0"
+alembic = "^1.8.0"
+psycopg2-binary = "^2.9.0"
+
+# Configuration and logging
+pydantic = "^1.10.0"
+python-dotenv = "^0.20.0"
+loguru = "^0.6.0"
+click = "^8.1.0"
+
+# Testing and quality (optional)
+pytest = { version = "^7.1.0", optional = true }
+pytest-cov = { version = "^4.0.0", optional = true }
+pytest-asyncio = { version = "^0.20.0", optional = true }
+black = { version = "^22.6.0", optional = true }
+isort = { version = "^5.10.0", optional = true }
+flake8 = { version = "^5.0.0", optional = true }
+mypy = { version = "^0.971", optional = true }
+bandit = { version = "^1.7.0", optional = true }
+pre-commit = { version = "^2.20.0", optional = true }
+
+# Documentation (optional)
+sphinx = { version = "^5.1.0", optional = true }
+sphinx-rtd-theme = { version = "^1.0.0", optional = true }
+myst-parser = { version = "^0.18.0", optional = true }
+
+[tool.poetry.extras]
+test = ["pytest", "pytest-cov", "pytest-asyncio"]
+dev = ["black", "isort", "flake8", "mypy", "bandit", "pre-commit"]
+docs = ["sphinx", "sphinx-rtd-theme", "myst-parser"]
+all = [
+    "pytest",
+    "pytest-cov",
+    "pytest-asyncio",
+    "black",
+    "isort",
+    "flake8",
+    "mypy",
+    "bandit",
+    "pre-commit",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "myst-parser",
+]
+
+[tool.poetry.scripts]
+vrs = "vision_robotics_suite.cli:main"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.1.0"
+pytest-cov = "^4.0.0"
+pytest-asyncio = "^0.20.0"
+black = "^22.6.0"
+isort = "^5.10.0"
+flake8 = "^5.0.0"
+mypy = "^0.971"
+bandit = "^1.7.0"
+pre-commit = "^2.20.0"
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^5.1.0"
+sphinx-rtd-theme = "^1.0.0"
+myst-parser = "^0.18.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+# Configuration for tools
+[tool.black]
+line-length = 88
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["vision_robotics_suite"]
+known_third_party = [
+    "numpy",
+    "opencv",
+    "opcua",
+    "pandas",
+    "matplotlib",
+    "fastapi",
+    "sqlalchemy",
+]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "opcua.*",
+    "pymodbus.*",
+    "pycomm3.*",
+    "cv2.*",
+    "matplotlib.*",
+    "plotly.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=src",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "performance: Performance tests",
+    "hardware: Tests requiring hardware",
+    "slow: Slow tests",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*", "*/migrations/*", "*/venv/*", "*/.venv/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101", "B601"]

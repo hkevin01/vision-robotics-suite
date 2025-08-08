@@ -1,0 +1,66 @@
+{
+  "recommendations": [
+    // Python Development
+    "ms-python.python",
+    "ms-python.black-formatter",
+    "ms-python.flake8",
+    "ms-python.pylint",
+    "ms-python.isort",
+
+    // Java Development
+    "redhat.java",
+    "vscjava.vscode-java-pack",
+    "vscjava.vscode-java-dependency",
+    "vscjava.vscode-java-test",
+    "vscjava.vscode-maven",
+
+    // C/C++ Development
+    "ms-vscode.cpptools",
+    "ms-vscode.cpptools-extension-pack",
+    "ms-vscode.cmake-tools",
+    "twxs.cmake",
+
+    // Git and Version Control
+    "eamodio.gitlens",
+    "github.vscode-pull-request-github",
+    "github.vscode-github-actions",
+
+    // AI Assistance
+    "github.copilot",
+    "github.copilot-chat",
+
+    // Code Quality and Formatting
+    "streetsidesoftware.code-spell-checker",
+    "usernamehw.errorlens",
+    "editorconfig.editorconfig",
+
+    // Documentation and Markdown
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+    "shd101wyy.markdown-preview-enhanced",
+
+    // YAML and JSON
+    "redhat.vscode-yaml",
+    "ms-vscode.vscode-json",
+
+    // Industrial Automation Extensions
+    "ms-vscode.vscode-serial-monitor",
+    "ms-vscode.vscode-embedded-tools",
+
+    // Utilities
+    "ms-vscode.live-server",
+    "ms-vscode-remote.remote-containers",
+    "ms-vscode-remote.remote-ssh",
+    "ms-vscode.vscode-docker",
+
+    // Themes and Icons
+    "pkief.material-icon-theme",
+    "zhuangtongfa.material-theme",
+
+    // Additional Development Tools
+    "formulahendry.auto-rename-tag",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-typescript-next",
+    "esbenp.prettier-vscode"
+  ]
+}

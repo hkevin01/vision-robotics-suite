@@ -1,0 +1,48 @@
+# Global code owners
+* @vision-robotics-team
+
+# Vision systems
+/src/vision_systems/ @vision-team @automation-engineers
+/tests/vision_systems/ @vision-team
+
+# Robot programming
+/src/robot_programming/ @robotics-team @automation-engineers
+/tests/robot_programming/ @robotics-team
+
+# PLC integration
+/src/plc_integration/ @controls-team @automation-engineers
+/tests/plc_integration/ @controls-team
+
+# Quality systems
+/src/quality_systems/ @quality-team @automation-engineers
+/tests/quality_systems/ @quality-team
+
+# SCADA/HMI
+/src/scada_hmi/ @hmi-team @automation-engineers
+/tests/scada_hmi/ @hmi-team
+
+# Simulation
+/src/simulation/ @simulation-team @automation-engineers
+/tests/simulation/ @simulation-team
+
+# Documentation
+/docs/ @documentation-team @tech-writers
+README.md @documentation-team
+CHANGELOG.md @documentation-team
+
+# CI/CD and GitHub workflows
+/.github/ @devops-team @automation-engineers
+/scripts/ @devops-team
+
+# Configuration files
+/.vscode/ @dev-tools-team
+/.copilot/ @dev-tools-team
+pyproject.toml @python-team
+requirements.txt @python-team
+Dockerfile @devops-team
+docker-compose.yml @devops-team
+
+# Security and compliance
+SECURITY.md @security-team
+/src/quality_systems/iatf_16949/ @quality-team @compliance-team
+/src/quality_systems/vda_6_3/ @quality-team @compliance-team
