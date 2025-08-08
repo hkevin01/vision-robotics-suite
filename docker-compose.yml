@@ -1,0 +1,57 @@
+# Vision Robotics Suite - Docker Compose Configuration
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+    image: vision-robotics-api:local
+    container_name: api-container
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    networks:
+      - vision-robotics-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  gui:
+    build:
+      context: ./gui
+      dockerfile: Dockerfile
+    image: vision-robotics-gui:local
+    container_name: gui-container
+    ports:
+      - "3000:80"
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      - api
+    networks:
+      - vision-robotics-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+networks:
+  vision-robotics-net:
+    driver: bridge
+
+volumes:
+  vision-data:
+  logs-data:
