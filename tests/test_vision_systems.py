@@ -2,12 +2,16 @@
 Test suite for vision systems module.
 """
 
-import numpy as np
-import pytest
+import os
+import sys
 
-from src.vision_systems.base import MeasurementResult, VisionSystemBase
-from src.vision_systems.camera_calibration import CameraCalibrator
-from src.vision_systems.halcon_algorithms import HalconProcessor
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+import numpy as np
+
+from vision_systems.base import MeasurementResult
+from vision_systems.camera_calibration import CameraCalibrator
+from vision_systems.halcon_algorithms import HalconProcessor
 
 
 class TestVisionSystemBase:
@@ -110,5 +114,4 @@ class TestHalconProcessor:
         assert info['halcon_version'] == "21.11"
 
 
-if __name__ == "__main__":
-    pytest.main([__file__])
+
