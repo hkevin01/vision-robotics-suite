@@ -1,4 +1,5 @@
 # 🤖 Vision Robotics Suite
+
 *A Comprehensive Industrial Automation Platform*
 
 [![Tests](https://github.com/hkevin01/vision-robotics-suite/workflows/Tests/badge.svg)](https://github.com/hkevin01/vision-robotics-suite/actions)
@@ -23,6 +24,7 @@ The Vision Robotics Suite addresses the critical need for **integrated, intellig
 ### Why This Platform Exists
 
 Modern manufacturing demands **smart, connected systems** that can:
+
 - ✅ Adapt to changing production requirements in real-time
 - ✅ Ensure consistent quality through automated inspection
 - ✅ Enable human-robot collaboration with safety guarantees
@@ -35,55 +37,135 @@ Modern manufacturing demands **smart, connected systems** that can:
 ### High-Level Architecture Overview
 
 ```mermaid
-graph TB
-    subgraph "Vision Systems Layer"
-        VS[Vision Systems] --> CAM[Camera Calibration]
-        VS --> HALCON[HALCON Algorithms]
-        VS --> COGNEX[Cognex Integration]
-        VS --> PHOTONEO[Photoneo 3D]
+graph TD
+    %% User Interface Layer (Top)
+    subgraph "🖥️ User Interface Layer"
+        GUI[Web GUI Dashboard]
+        WEB[Web Dashboard]
+        IGNITION[Ignition HMI]
+        LOGGING[Data Logging & Reports]
     end
 
-    subgraph "Robot Programming Layer"
-        RP[Robot Programming] --> UR[Universal Robots]
-        RP --> FANUC[FANUC Integration]
-        RP --> ABB[ABB Robotics]
-        RP --> COLLISION[Multi-Robot Collision Avoidance]
+    %% Application Programming Interface (Core)
+    subgraph "🚀 API Integration Layer"
+        API[FastAPI Backend<br/>WebSocket Support]
+        AUTH[Authentication & Security]
+        QUEUE[Message Queue & Events]
     end
 
-    subgraph "Communication Layer"
-        PLC[PLC Integration] --> OPCUA[OPC-UA]
-        PLC --> MODBUS[Modbus TCP/RTU]
-        PLC --> ROCKWELL[Rockwell RSLogix]
-        PLC --> SIEMENS[Siemens TIA Portal]
+    %% Parallel Processing Layers
+    subgraph "👁️ Vision Systems"
+        direction TB
+        VS[Vision Controller]
+        CAM[Camera Calibration]
+        HALCON[HALCON Algorithms]
+        COGNEX[Cognex Integration]
+        PHOTONEO[Photoneo 3D Scanner]
     end
 
-    subgraph "Quality Control Layer"
-        QC[Quality Systems] --> IATF[IATF 16949]
-        QC --> SPC[SPC Analysis]
-        QC --> VDA[VDA 6.3]
+    subgraph "🤖 Robot Programming"
+        direction TB
+        RP[Robot Controller]
+        UR[Universal Robots]
+        FANUC[FANUC Integration]
+        ABB[ABB Robotics]
+        COLLISION[Collision Avoidance]
     end
 
-    subgraph "User Interface Layer"
-        SCADA[SCADA/HMI] --> WEB[Web Dashboard]
-        SCADA --> IGNITION[Ignition Projects]
-        SCADA --> LOGGING[Data Logging]
+    subgraph "🔌 Industrial Communication"
+        direction TB
+        PLC[PLC Gateway]
+        OPCUA[OPC-UA Server]
+        MODBUS[Modbus TCP/RTU]
+        ROCKWELL[Rockwell RSLogix]
+        SIEMENS[Siemens TIA Portal]
     end
 
-    subgraph "Simulation Layer"
-        SIM[Simulation] --> TWIN[Digital Twin]
-        SIM --> EMULATE[Emulate3D]
-        SIM --> ROBODK[RoboDK Models]
+    subgraph "✅ Quality Control"
+        direction TB
+        QC[Quality Manager]
+        IATF[IATF 16949 Compliance]
+        SPC[SPC Analysis Engine]
+        VDA[VDA 6.3 Auditing]
     end
 
-    VS --> API[FastAPI Backend]
+    subgraph "🎮 Simulation & Digital Twin"
+        direction TB
+        SIM[Simulation Engine]
+        TWIN[Digital Twin Model]
+        EMULATE[Emulate3D Integration]
+        ROBODK[RoboDK Virtual Cell]
+    end
+
+    %% Data Storage Layer
+    subgraph "💾 Data Storage Layer"
+        direction LR
+        DB[(PostgreSQL<br/>Relational Data)]
+        TSDB[(InfluxDB<br/>Time Series)]
+        CACHE[(Redis<br/>Cache & Sessions)]
+    end
+
+    %% Connections - Top Down Flow
+    GUI --> API
+    WEB --> API
+    IGNITION --> API
+    LOGGING --> API
+
+    API --> AUTH
+    API --> QUEUE
+
+    %% Core systems to API
+    VS --> API
     RP --> API
     PLC --> API
     QC --> API
-    SCADA --> API
     SIM --> API
 
-    API --> DB[(Database)]
-    API --> GUI[Web GUI]
+    %% API to Data Layer
+    API --> DB
+    API --> TSDB
+    API --> CACHE
+
+    %% Internal system connections
+    VS --> CAM
+    VS --> HALCON
+    VS --> COGNEX
+    VS --> PHOTONEO
+
+    RP --> UR
+    RP --> FANUC
+    RP --> ABB
+    RP --> COLLISION
+
+    PLC --> OPCUA
+    PLC --> MODBUS
+    PLC --> ROCKWELL
+    PLC --> SIEMENS
+
+    QC --> IATF
+    QC --> SPC
+    QC --> VDA
+
+    SIM --> TWIN
+    SIM --> EMULATE
+    SIM --> ROBODK
+
+    %% Cross-system integration
+    VS -.-> QC
+    RP -.-> VS
+    PLC -.-> RP
+    SIM -.-> VS
+    SIM -.-> RP
+
+    classDef userLayer fill:#e1f5fe
+    classDef apiLayer fill:#f3e5f5
+    classDef systemLayer fill:#e8f5e8
+    classDef dataLayer fill:#fff3e0
+
+    class GUI,WEB,IGNITION,LOGGING userLayer
+    class API,AUTH,QUEUE apiLayer
+    class VS,RP,PLC,QC,SIM,CAM,HALCON,COGNEX,PHOTONEO,UR,FANUC,ABB,COLLISION,OPCUA,MODBUS,ROCKWELL,SIEMENS,IATF,SPC,VDA,TWIN,EMULATE,ROBODK systemLayer
+    class DB,TSDB,CACHE dataLayer
 ```
 
 ### Technology Stack & Component Selection
@@ -147,12 +229,14 @@ vision-robotics-suite/
 ### Installation
 
 1. **Clone the repository:**
+
 ```bash
 git clone https://github.com/hkevin01/vision-robotics-suite.git
 cd vision-robotics-suite
 ```
 
 2. **Install dependencies:**
+
 ```bash
 # Using Poetry (recommended)
 poetry install --all-extras
@@ -162,6 +246,7 @@ pip install -e .
 ```
 
 3. **Start the development environment:**
+
 ```bash
 # Quick start with Docker
 ./run.sh
@@ -171,9 +256,10 @@ docker-compose up -d
 ```
 
 4. **Access the web interface:**
-- **Main Dashboard**: http://localhost:8080
-- **API Documentation**: http://localhost:8000/docs
-- **Grafana Monitoring**: http://localhost:3000
+
+- **Main Dashboard**: <http://localhost:8080>
+- **API Documentation**: <http://localhost:8000/docs>
+- **Grafana Monitoring**: <http://localhost:3000>
 
 ### Running Tests
 
