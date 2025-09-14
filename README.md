@@ -14,7 +14,7 @@
 The Vision Robotics Suite addresses the critical need for **integrated, intelligent manufacturing systems** that combine:
 
 - **Machine Vision** for real-time quality inspection and guidance
-- **Collaborative Robotics** for flexible, human-safe automation  
+- **Collaborative Robotics** for flexible, human-safe automation
 - **Industrial Communication** via OPC-UA, Modbus, and proprietary protocols
 - **Quality Systems** compliant with IATF 16949 and aerospace standards
 - **SCADA/HMI** for centralized monitoring and control
@@ -42,46 +42,46 @@ graph TB
         VS --> COGNEX[Cognex Integration]
         VS --> PHOTONEO[Photoneo 3D]
     end
-    
+
     subgraph "Robot Programming Layer"
         RP[Robot Programming] --> UR[Universal Robots]
         RP --> FANUC[FANUC Integration]
         RP --> ABB[ABB Robotics]
         RP --> COLLISION[Multi-Robot Collision Avoidance]
     end
-    
+
     subgraph "Communication Layer"
         PLC[PLC Integration] --> OPCUA[OPC-UA]
         PLC --> MODBUS[Modbus TCP/RTU]
         PLC --> ROCKWELL[Rockwell RSLogix]
         PLC --> SIEMENS[Siemens TIA Portal]
     end
-    
+
     subgraph "Quality Control Layer"
         QC[Quality Systems] --> IATF[IATF 16949]
         QC --> SPC[SPC Analysis]
         QC --> VDA[VDA 6.3]
     end
-    
+
     subgraph "User Interface Layer"
         SCADA[SCADA/HMI] --> WEB[Web Dashboard]
         SCADA --> IGNITION[Ignition Projects]
         SCADA --> LOGGING[Data Logging]
     end
-    
+
     subgraph "Simulation Layer"
         SIM[Simulation] --> TWIN[Digital Twin]
         SIM --> EMULATE[Emulate3D]
         SIM --> ROBODK[RoboDK Models]
     end
-    
+
     VS --> API[FastAPI Backend]
     RP --> API
     PLC --> API
     QC --> API
     SCADA --> API
     SIM --> API
-    
+
     API --> DB[(Database)]
     API --> GUI[Web GUI]
 ```
@@ -116,7 +116,7 @@ This repository contains a comprehensive industrial automation platform with:
 
 - **🎨 Automotive Paint Inspection**: Surface defect detection and color matching algorithms
 - **🏗️ Body-in-White Inspection**: Dimensional accuracy and gap/flush measurements
-- **🔋 Battery Pack Quality Control**: Cell alignment and connection integrity verification  
+- **🔋 Battery Pack Quality Control**: Cell alignment and connection integrity verification
 - **⚙️ Engine Timing Chain Verification**: Precision timing analysis and wear detection
 - **🚗 Adaptive Lighting Control**: Dynamic lighting adjustment for optimal vision conditions
 
