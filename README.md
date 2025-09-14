@@ -34,138 +34,155 @@ Modern manufacturing demands **smart, connected systems** that can:
 
 ## �️ System Architecture
 
-### High-Level Architecture Overview
+### 1. System Overview & Data Flow
 
 ```mermaid
 graph TD
-    %% User Interface Layer (Top)
-    subgraph "🖥️ User Interface Layer"
+    %% User Interface Layer
+    subgraph UI["🖥️ User Interface Layer"]
+        direction LR
         GUI[Web GUI Dashboard]
-        WEB[Web Dashboard]
         IGNITION[Ignition HMI]
-        LOGGING[Data Logging & Reports]
+        MOBILE[Mobile Interface]
     end
 
-    %% Application Programming Interface (Core)
-    subgraph "🚀 API Integration Layer"
-        API[FastAPI Backend<br/>WebSocket Support]
-        AUTH[Authentication & Security]
-        QUEUE[Message Queue & Events]
+    %% API Integration Layer
+    subgraph APIL["🚀 API Integration Layer"]
+        direction LR
+        API[FastAPI Backend]
+        AUTH[Authentication]
+        QUEUE[Message Queue]
     end
 
-    %% Parallel Processing Layers
-    subgraph "👁️ Vision Systems"
-        direction TB
-        VS[Vision Controller]
-        CAM[Camera Calibration]
-        HALCON[HALCON Algorithms]
-        COGNEX[Cognex Integration]
-        PHOTONEO[Photoneo 3D Scanner]
-    end
-
-    subgraph "🤖 Robot Programming"
-        direction TB
-        RP[Robot Controller]
-        UR[Universal Robots]
-        FANUC[FANUC Integration]
-        ABB[ABB Robotics]
-        COLLISION[Collision Avoidance]
-    end
-
-    subgraph "🔌 Industrial Communication"
-        direction TB
-        PLC[PLC Gateway]
-        OPCUA[OPC-UA Server]
-        MODBUS[Modbus TCP/RTU]
-        ROCKWELL[Rockwell RSLogix]
-        SIEMENS[Siemens TIA Portal]
-    end
-
-    subgraph "✅ Quality Control"
-        direction TB
-        QC[Quality Manager]
-        IATF[IATF 16949 Compliance]
-        SPC[SPC Analysis Engine]
-        VDA[VDA 6.3 Auditing]
-    end
-
-    subgraph "🎮 Simulation & Digital Twin"
-        direction TB
-        SIM[Simulation Engine]
-        TWIN[Digital Twin Model]
-        EMULATE[Emulate3D Integration]
-        ROBODK[RoboDK Virtual Cell]
+    %% Core Systems Layer
+    subgraph CORE["⚙️ Core Systems Layer"]
+        direction LR
+        VISION[Vision Systems]
+        ROBOTS[Robot Control]
+        COMMS[Industrial Comms]
+        QUALITY[Quality Control]
+        SIM[Simulation]
     end
 
     %% Data Storage Layer
-    subgraph "💾 Data Storage Layer"
+    subgraph DATA["💾 Data Storage Layer"]
         direction LR
-        DB[(PostgreSQL<br/>Relational Data)]
-        TSDB[(InfluxDB<br/>Time Series)]
-        CACHE[(Redis<br/>Cache & Sessions)]
+        DB[(PostgreSQL)]
+        TSDB[(InfluxDB)]
+        CACHE[(Redis)]
     end
 
-    %% Connections - Top Down Flow
-    GUI --> API
-    WEB --> API
-    IGNITION --> API
-    LOGGING --> API
+    %% Vertical Flow
+    UI --> APIL
+    APIL --> CORE
+    CORE --> DATA
 
-    API --> AUTH
-    API --> QUEUE
+    %% Styling
+    classDef layerBox fill:#e8e8e8,stroke:#555,stroke-width:3px,color:#222
+    classDef nodeBox fill:#f0f0f0,stroke:#666,stroke-width:2px,color:#333
 
-    %% Core systems to API
-    VS --> API
-    RP --> API
-    PLC --> API
-    QC --> API
-    SIM --> API
+    class UI,APIL,CORE,DATA layerBox
+    class GUI,IGNITION,MOBILE,API,AUTH,QUEUE,VISION,ROBOTS,COMMS,QUALITY,SIM,DB,TSDB,CACHE nodeBox
+```
 
-    %% API to Data Layer
-    API --> DB
-    API --> TSDB
-    API --> CACHE
+### 2. Manufacturing Systems Architecture
 
-    %% Internal system connections
-    VS --> CAM
-    VS --> HALCON
-    VS --> COGNEX
-    VS --> PHOTONEO
+```mermaid
+graph TD
+    %% Vision Systems
+    subgraph VISION["👁️ Vision Systems"]
+        direction TB
+        VC[Vision Controller]
+        VC --> CAM[Camera Calibration]
+        VC --> HALCON[HALCON Algorithms]
+        VC --> COGNEX[Cognex Integration]
+        VC --> PHOTONEO[Photoneo 3D Scanner]
+        VC --> LIGHTING[Adaptive Lighting]
+    end
 
-    RP --> UR
-    RP --> FANUC
-    RP --> ABB
-    RP --> COLLISION
+    %% Robot Programming
+    subgraph ROBOTS["🤖 Robot Programming"]
+        direction TB
+        RC[Robot Controller]
+        RC --> UR[Universal Robots]
+        RC --> FANUC[FANUC Integration]
+        RC --> ABB[ABB Robotics]
+        RC --> YASKAWA[Yaskawa Motors]
+        RC --> COLLISION[Multi-Robot Collision Avoidance]
+    end
 
-    PLC --> OPCUA
-    PLC --> MODBUS
-    PLC --> ROCKWELL
-    PLC --> SIEMENS
+    %% Industrial Communication
+    subgraph COMMS["🔌 Industrial Communication"]
+        direction TB
+        PC[PLC Gateway]
+        PC --> OPCUA[OPC-UA Server]
+        PC --> MODBUS[Modbus TCP/RTU]
+        PC --> ROCKWELL[Rockwell RSLogix]
+        PC --> SIEMENS[Siemens TIA Portal]
+        PC --> ETHERNET[EtherNet/IP]
+    end
 
-    QC --> IATF
-    QC --> SPC
-    QC --> VDA
+    %% System Integration
+    VISION --> ROBOTS
+    ROBOTS --> COMMS
+    VISION -.-> COMMS
 
-    SIM --> TWIN
-    SIM --> EMULATE
-    SIM --> ROBODK
+    %% Styling
+    classDef systemBox fill:#e8e8e8,stroke:#555,stroke-width:3px,color:#222
+    classDef componentBox fill:#f0f0f0,stroke:#666,stroke-width:2px,color:#333
 
-    %% Cross-system integration
-    VS -.-> QC
-    RP -.-> VS
-    PLC -.-> RP
-    SIM -.-> VS
-    SIM -.-> RP
+    class VISION,ROBOTS,COMMS systemBox
+    class VC,CAM,HALCON,COGNEX,PHOTONEO,LIGHTING,RC,UR,FANUC,ABB,YASKAWA,COLLISION,PC,OPCUA,MODBUS,ROCKWELL,SIEMENS,ETHERNET componentBox
+```
 
-    classDef userLayer fill:#e1f5fe
-    classDef apiLayer fill:#f3e5f5
-    classDef systemLayer fill:#e8f5e8
-    classDef dataLayer fill:#fff3e0
+### 3. Quality Control & Simulation Systems
 
-    class GUI,WEB,IGNITION,LOGGING userLayer
-    class API,AUTH,QUEUE apiLayer
-    class VS,RP,PLC,QC,SIM,CAM,HALCON,COGNEX,PHOTONEO,UR,FANUC,ABB,COLLISION,OPCUA,MODBUS,ROCKWELL,SIEMENS,IATF,SPC,VDA,TWIN,EMULATE,ROBODK systemLayer
-    class DB,TSDB,CACHE dataLayer
+```mermaid
+graph TD
+    %% Quality Control Systems
+    subgraph QUALITY["✅ Quality Control Systems"]
+        direction TB
+        QM[Quality Manager]
+        QM --> IATF[IATF 16949 Compliance]
+        QM --> SPC[SPC Analysis Engine]
+        QM --> VDA[VDA 6.3 Auditing]
+        QM --> TRACE[Traceability System]
+        QM --> REPORTS[Quality Reporting]
+    end
+
+    %% Simulation & Digital Twin
+    subgraph SIMULATION["🎮 Simulation & Digital Twin"]
+        direction TB
+        SE[Simulation Engine]
+        SE --> TWIN[Digital Twin Model]
+        SE --> EMULATE[Emulate3D Integration]
+        SE --> ROBODK[RoboDK Virtual Cell]
+        SE --> PHYSICS[Physics Simulation]
+        SE --> PREDICTIVE[Predictive Maintenance]
+    end
+
+    %% SCADA & Monitoring
+    subgraph SCADA["📊 SCADA & Monitoring"]
+        direction TB
+        SM[SCADA Manager]
+        SM --> DASHBOARD[Real-time Dashboard]
+        SM --> ALARMS[Alarm Management]
+        SM --> TRENDS[Trend Analysis]
+        SM --> LOGGING[Data Logging]
+        SM --> BACKUP[Backup Systems]
+    end
+
+    %% System Integration
+    QUALITY --> SCADA
+    SIMULATION --> QUALITY
+    SIMULATION -.-> SCADA
+
+    %% Styling
+    classDef qualityBox fill:#e8e8e8,stroke:#555,stroke-width:3px,color:#222
+    classDef componentBox fill:#f0f0f0,stroke:#666,stroke-width:2px,color:#333
+
+    class QUALITY,SIMULATION,SCADA qualityBox
+    class QM,IATF,SPC,VDA,TRACE,REPORTS,SE,TWIN,EMULATE,ROBODK,PHYSICS,PREDICTIVE,SM,DASHBOARD,ALARMS,TRENDS,LOGGING,BACKUP componentBox
 ```
 
 ### Technology Stack & Component Selection
