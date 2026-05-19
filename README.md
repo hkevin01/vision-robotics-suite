@@ -187,16 +187,16 @@ graph TD
 
 ### Technology Stack & Component Selection
 
-| Layer | Technology | Purpose | Why Chosen |
+| <sub>Layer</sub> | <sub>Technology</sub> | <sub>Purpose</sub> | <sub>Why Chosen</sub> |
 |-------|------------|---------|------------|
-| **Vision Processing** | HALCON, OpenCV, Cognex | Image analysis, quality inspection | Industry-standard machine vision libraries with proven reliability |
-| **Robot Control** | Universal Robots SDK, FANUC APIs | Robot programming and coordination | Native manufacturer APIs for real-time control |
-| **Industrial Communication** | OPC-UA, Modbus, pycomm3 | PLC and device connectivity | Open standards ensuring interoperability |
-| **Web Framework** | FastAPI, WebSockets | Real-time API and WebSocket support | High-performance async framework with automatic documentation |
-| **Database** | PostgreSQL, InfluxDB | Relational and time-series data | Enterprise-grade reliability with time-series optimization |
-| **Frontend** | HTML5, CSS3, JavaScript | Responsive web interface | Universal browser compatibility with real-time updates |
-| **Containerization** | Docker, Docker Compose | Deployment and scaling | Consistent deployment across environments |
-| **Quality Assurance** | pytest, mypy, black | Code quality and testing | Industry best practices for Python development |
+| <sub>**Vision Processing**</sub> | <sub>HALCON, OpenCV, Cognex</sub> | <sub>Image analysis, quality inspection</sub> | <sub>Industry-standard machine vision libraries with proven reliability</sub> |
+| <sub>**Robot Control**</sub> | <sub>Universal Robots SDK, FANUC APIs</sub> | <sub>Robot programming and coordination</sub> | <sub>Native manufacturer APIs for real-time control</sub> |
+| <sub>**Industrial Communication**</sub> | <sub>OPC-UA, Modbus, pycomm3</sub> | <sub>PLC and device connectivity</sub> | <sub>Open standards ensuring interoperability</sub> |
+| <sub>**Web Framework**</sub> | <sub>FastAPI, WebSockets</sub> | <sub>Real-time API and WebSocket support</sub> | <sub>High-performance async framework with automatic documentation</sub> |
+| <sub>**Database**</sub> | <sub>PostgreSQL, InfluxDB</sub> | <sub>Relational and time-series data</sub> | <sub>Enterprise-grade reliability with time-series optimization</sub> |
+| <sub>**Frontend**</sub> | <sub>HTML5, CSS3, JavaScript</sub> | <sub>Responsive web interface</sub> | <sub>Universal browser compatibility with real-time updates</sub> |
+| <sub>**Containerization**</sub> | <sub>Docker, Docker Compose</sub> | <sub>Deployment and scaling</sub> | <sub>Consistent deployment across environments</sub> |
+| <sub>**Quality Assurance**</sub> | <sub>pytest, mypy, black</sub> | <sub>Code quality and testing</sub> | <sub>Industry best practices for Python development</sub> |
 
 ## 📊 What's Actually Here
 
